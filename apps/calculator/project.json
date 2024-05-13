@@ -1,0 +1,97 @@
+{
+  "name": "calculator",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/calculator/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/calculator",
+        "index": "apps/calculator/src/index.html",
+        "baseHref": "/",
+        "main": "apps/calculator/src/main.ts",
+        "tsConfig": "apps/calculator/tsconfig.app.json",
+        "assets": [
+          "apps/calculator/src/favicon.ico",
+          "apps/calculator/src/assets"
+        ],
+        "styles": ["apps/calculator/src/styles.css"],
+        "scripts": [],
+        "webpackConfig": "apps/calculator/webpack.config.ts"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/calculator/src/environments/environment.ts",
+              "with": "apps/calculator/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "webpackConfig": "apps/calculator/webpack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/react:module-federation-dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "calculator:build",
+        "hmr": true,
+        "port": 4201
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "calculator:build:development"
+        },
+        "production": {
+          "buildTarget": "calculator:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/calculator/jest.config.ts"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "buildTarget": "calculator:build",
+        "watch": false,
+        "port": 4201
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "calculator:build:development"
+        },
+        "production": {
+          "buildTarget": "calculator:build:production"
+        }
+      }
+    }
+  }
+}
